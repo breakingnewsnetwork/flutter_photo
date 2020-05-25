@@ -86,7 +86,7 @@ class PhotoPicker {
     Color textColor,
     Color disableColor,
     int thumbSize = 64,
-    I18nProvider provider = I18nProvider.chinese,
+    I18nProvider provider = I18nProvider.english,
     SortDelegate sortDelegate,
     CheckBoxBuilderDelegate checkBoxBuilderDelegate,
     LoadingDelegate loadingDelegate,
