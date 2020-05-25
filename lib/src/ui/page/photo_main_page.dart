@@ -241,6 +241,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
 
     if (pathList.isNotEmpty) {
       assetProvider.current = pathList[0];
+      _currentPath = assetProvider.current;
       await assetProvider.loadMore();
     }
 
@@ -381,7 +382,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
   }
 
   void _onGalleryChange(AssetPathEntity assetPathEntity) async {
-    // _currentPath = assetPathEntity;
+    _currentPath = assetPathEntity;
 
     // _currentPath.assetList.then((v) async {
     //   _sortAssetList(v);

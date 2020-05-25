@@ -18,10 +18,10 @@ import 'package:photo/src/ui/photo_app.dart';
 export 'package:photo/src/delegate/checkbox_builder_delegate.dart';
 export 'package:photo/src/delegate/loading_delegate.dart';
 export 'package:photo/src/delegate/sort_delegate.dart';
-export 'package:photo/src/provider/i18n_provider.dart'
-    show I18NCustomProvider, I18nProvider, CNProvider, ENProvider;
-export 'package:photo/src/entity/options.dart' show PickType;
+export 'package:photo/src/provider/i18n_provider.dart';
+export 'package:photo/src/entity/options.dart';
 export 'package:photo/src/delegate/badge_delegate.dart';
+export 'package:photo/src/provider/selected_provider.dart';
 
 class PhotoPicker {
   static PhotoPicker _instance;
@@ -175,6 +175,7 @@ class PhotoPicker {
     return Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (ctx) => PhotoApp(
+          key: UniqueKey(),
           options: options,
           provider: provider,
           photoList: photoList,
