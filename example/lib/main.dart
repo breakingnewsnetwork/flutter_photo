@@ -38,8 +38,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   String currentSelected = "";
 
   @override
-  Widget buildBigImageLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildBigImageLoading(BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -52,8 +51,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   }
 
   @override
-  Widget buildPreviewLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildPreviewLoading(BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -114,8 +112,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   }
 
   void _testPhotoListParams() async {
-    var assetPathList =
-        await PhotoManager.getAssetPathList(type: RequestType.image);
+    var assetPathList = await PhotoManager.getAssetPathList(type: RequestType.image);
     _pickAsset(PickType.all, pathList: assetPathList);
   }
 
@@ -187,10 +184,11 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
 
       List<AssetEntity> preview = [];
       preview.addAll(imgList);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (_) => PreviewPage(list: preview)));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => PreviewPage(list: preview)));
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void routePage(Widget widget) {

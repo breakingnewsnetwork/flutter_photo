@@ -42,7 +42,9 @@ class _PickedExampleState extends State<PickedExample> {
     if (result != null && result.isNotEmpty) {
       picked.clear();
       picked.addAll(result);
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 }

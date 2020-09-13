@@ -17,6 +17,7 @@ import 'package:photo/src/ui/page/photo_preview_page.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 part './main/bottom_widget.dart';
+
 part './main/image_item.dart';
 
 class PhotoMainPage extends StatefulWidget {
@@ -35,13 +36,12 @@ class PhotoMainPage extends StatefulWidget {
   _PhotoMainPageState createState() => _PhotoMainPageState();
 }
 
-class _PhotoMainPageState extends State<PhotoMainPage>
-    with SelectedProvider, GalleryListProvider {
+class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, GalleryListProvider {
   Options get options => widget.options;
 
   I18nProvider get i18nProvider => PhotoPickerProvider.of(context).provider;
-  AssetProvider get assetProvider =>
-      PhotoPickerProvider.of(context).assetProvider;
+
+  AssetProvider get assetProvider => PhotoPickerProvider.of(context).assetProvider;
 
   List<AssetEntity> get list => assetProvider.data;
 
@@ -139,9 +139,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
                 splashColor: Colors.transparent,
                 child: Text(
                   i18nProvider.getSureText(options, selectedCount),
-                  style: selectedCount == 0
-                      ? textStyle.copyWith(color: options.disableColor)
-                      : textStyle,
+                  style: selectedCount == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle,
                 ),
                 onPressed: selectedCount == 0 ? null : sure,
               ),
@@ -250,9 +248,11 @@ class _PhotoMainPageState extends State<PhotoMainPage>
       }
     }
 
-    setState(() {
-      _isInit = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isInit = true;
+      });
+    }
   }
 
   Widget _buildBody() {
@@ -310,7 +310,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
 
   _loadMore() async {
     await assetProvider.loadMore();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   _buildMask(bool showMask) {
@@ -377,7 +379,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
     } else {
       removeSelectEntity(entity);
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onGalleryChange(AssetPathEntity assetPathEntity) async {
@@ -394,7 +398,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
     if (assetPathEntity != assetProvider.current) {
       assetProvider.current = assetPathEntity;
       await assetProvider.loadMore();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -425,7 +431,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
         return;
       }
       isPushed = false;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
