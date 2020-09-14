@@ -39,9 +39,9 @@ class PhotoMainPage extends StatefulWidget {
 class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, GalleryListProvider {
   Options get options => widget.options;
 
-  I18nProvider get i18nProvider => PhotoPickerProvider.of(context).provider;
+  I18nProvider get i18nProvider => PhotoPickerProvider.of(context)?.provider;
 
-  AssetProvider get assetProvider => PhotoPickerProvider.of(context).assetProvider;
+  AssetProvider get assetProvider => PhotoPickerProvider.of(context)?.assetProvider;
 
   List<AssetEntity> get list => assetProvider.data;
 

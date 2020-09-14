@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo/src/provider/asset_provider.dart';
 
 import 'package:photo_manager/photo_manager.dart';
 
@@ -12,12 +13,14 @@ class PhotoApp extends StatelessWidget {
   final I18nProvider provider;
   final List<AssetPathEntity> photoList;
   final List<AssetEntity> pickedAssetList;
+  final AssetProvider assetProvider;
   const PhotoApp({
     Key key,
     this.options,
     this.provider,
     this.photoList,
     this.pickedAssetList,
+    this.assetProvider,
   }) : super(key: key);
 
   @override
@@ -26,8 +29,10 @@ class PhotoApp extends StatelessWidget {
       provider: provider,
       options: options,
       pickedAssetList: pickedAssetList,
+      assetProvider: assetProvider,
+      key: ObjectKey('photo-app-provider'),
       child: PhotoMainPage(
-        key: UniqueKey(),
+        key:  ObjectKey('photo-app-main-page'),
         onClose: (List<AssetEntity> value) {
           Navigator.pop(context, value);
         },

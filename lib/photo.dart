@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:photo/src/engine/lru_cache.dart';
+import 'package:photo/src/provider/asset_provider.dart';
 
 import 'package:photo_manager/photo_manager.dart';
 
@@ -27,7 +28,7 @@ class PhotoPicker {
   static PhotoPicker _instance;
 
   PhotoPicker._();
-
+  final AssetProvider assetProvider = AssetProvider();
   factory PhotoPicker() {
     _instance ??= PhotoPicker._();
     return _instance;
@@ -175,11 +176,12 @@ class PhotoPicker {
     return Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (ctx) => PhotoApp(
-          key: UniqueKey(),
+          key: ObjectKey('photo-app'),
           options: options,
           provider: provider,
           photoList: photoList,
           pickedAssetList: pickedAssetList,
+          assetProvider: assetProvider,
         ),
       ),
     );

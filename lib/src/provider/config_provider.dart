@@ -8,11 +8,12 @@ import 'package:photo_manager/photo_manager.dart';
 class PhotoPickerProvider extends InheritedWidget {
   final Options options;
   final I18nProvider provider;
-  final AssetProvider assetProvider = AssetProvider();
+  final AssetProvider assetProvider;
   final List<AssetEntity> pickedAssetList;
   PhotoPickerProvider({
     @required this.options,
     @required this.provider,
+    @required this.assetProvider,
     @required Widget child,
     this.pickedAssetList,
     Key key,
@@ -24,8 +25,8 @@ class PhotoPickerProvider extends InheritedWidget {
   }
 
   static PhotoPickerProvider of(BuildContext context) =>
-      context.inheritFromWidgetOfExactType(PhotoPickerProvider);
+      context?.inheritFromWidgetOfExactType(PhotoPickerProvider);
 
   static AssetProvider assetProviderOf(BuildContext context) =>
-      of(context).assetProvider;
+      of(context)?.assetProvider;
 }
