@@ -48,7 +48,9 @@ class __BottomWidgetState extends State<_BottomWidget> {
           child: Row(
             children: <Widget>[
               FlatButton(
-                onPressed: _showGallerySelectDialog,
+                onPressed: () async {
+                  await _showGallerySelectDialog();
+                },
                 splashColor: Colors.transparent,
                 child: Container(
                   alignment: Alignment.center,
@@ -86,10 +88,11 @@ class __BottomWidgetState extends State<_BottomWidget> {
     );
   }
 
-  void _showGallerySelectDialog() async {
+  Future<void> _showGallerySelectDialog() async {
     var result = await showModalBottomSheet(
       context: context,
-      builder: (ctx) => ChangeGalleryDialog(
+      builder: (ctx) =>
+          ChangeGalleryDialog(
             galleryList: widget.galleryListProvider.galleryPathList,
             i18n: i18nProvider,
             options: options,

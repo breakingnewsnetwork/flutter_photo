@@ -196,18 +196,18 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     );
   }
 
-  void _refreshList() async {
+  Future<void> _refreshList() async {
     await Future.delayed(Duration.zero);
     if (!useAlbum) {
-      _refreshListFromWidget();
+      await _refreshListFromWidget();
       return;
     }
 
-    _refreshListFromGallery();
+    await _refreshListFromGallery();
   }
 
   Future<void> _refreshListFromWidget() async {
-    _onRefreshAssetPathList(widget.photoList);
+    await _onRefreshAssetPathList(widget.photoList);
   }
 
   Future<void> _refreshListFromGallery() async {
@@ -223,7 +223,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
         pathList = await PhotoManager.getAssetPathList(type: RequestType.all);
     }
 
-    _onRefreshAssetPathList(pathList);
+    await _onRefreshAssetPathList(pathList);
   }
 
   Future<void> _onRefreshAssetPathList(List<AssetPathEntity> pathList) async {
@@ -308,7 +308,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     );
   }
 
-  _loadMore() async {
+  Future<void> _loadMore() async {
     await assetProvider.loadMore();
     if (mounted) {
       setState(() {});
@@ -384,7 +384,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     }
   }
 
-  void _onGalleryChange(AssetPathEntity assetPathEntity) async {
+  Future<void> _onGalleryChange(AssetPathEntity assetPathEntity) async {
     _currentPath = assetPathEntity;
 
     // _currentPath.assetList.then((v) async {
@@ -437,7 +437,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     });
   }
 
-  void _onTapPreview() async {
+  Future<void> _onTapPreview() async {
     var result = PhotoPreviewResult();
     isPushed = true;
     var v = await Navigator.of(context).push(
@@ -509,7 +509,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     }
   }
 
-  void _onPhotoRefresh() async {
+  Future<void> _onPhotoRefresh() async {
     List<AssetPathEntity> pathList;
     switch (options.pickType) {
       case PickType.onlyImage:
@@ -532,11 +532,11 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     if (!this.galleryPathList.contains(this.currentPath)) {
       // current path is deleted , 当前的相册被删除, 应该提示刷新
       if (this.galleryPathList.length > 0) {
-        _onGalleryChange(this.galleryPathList[0]);
+        await _onGalleryChange(this.galleryPathList[0]);
       }
       return;
     }
     // Not deleted
-    _onGalleryChange(this.currentPath);
+    await _onGalleryChange(this.currentPath);
   }
 }
