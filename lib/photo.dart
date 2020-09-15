@@ -23,12 +23,13 @@ export 'package:photo/src/provider/i18n_provider.dart';
 export 'package:photo/src/entity/options.dart';
 export 'package:photo/src/delegate/badge_delegate.dart';
 export 'package:photo/src/provider/selected_provider.dart';
+export 'package:photo/src/provider/asset_provider.dart';
 
 class PhotoPicker {
   static PhotoPicker _instance;
 
   PhotoPicker._();
-  final AssetProvider assetProvider = AssetProvider();
+
   factory PhotoPicker() {
     _instance ??= PhotoPicker._();
     return _instance;
@@ -95,6 +96,7 @@ class PhotoPicker {
     BadgeDelegate badgeDelegate = const DefaultBadgeDelegate(),
     List<AssetPathEntity> photoPathList,
     List<AssetEntity> pickedAssetList,
+    @required AssetProvider assetProvider,
   }) {
     assert(provider != null, "provider must be not null");
     assert(context != null, "context must be not null");
@@ -133,6 +135,7 @@ class PhotoPicker {
       provider,
       photoPathList,
       pickedAssetList,
+      assetProvider,
     );
   }
 
@@ -142,6 +145,7 @@ class PhotoPicker {
     I18nProvider provider,
     List<AssetPathEntity> photoList,
     List<AssetEntity> pickedAssetList,
+    AssetProvider assetProvider,
   ) async {
     var requestPermission = await PhotoManager.requestPermission();
     if (requestPermission != true) {
@@ -163,6 +167,7 @@ class PhotoPicker {
       provider,
       photoList,
       pickedAssetList,
+      assetProvider,
     );
   }
 
@@ -172,6 +177,7 @@ class PhotoPicker {
     I18nProvider provider,
     List<AssetPathEntity> photoList,
     List<AssetEntity> pickedAssetList,
+    AssetProvider assetProvider,
   ) async {
     return Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
