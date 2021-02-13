@@ -38,6 +38,7 @@ class _PickedExampleState extends State<PickedExample> {
     final result = await PhotoPicker.pickAsset(
       context: context,
       pickedAssetList: picked,
+      assetProvider: AssetProvider(),
     );
     if (result != null && result.isNotEmpty) {
       picked.clear();

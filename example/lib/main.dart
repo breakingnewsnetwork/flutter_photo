@@ -124,52 +124,51 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
     PhotoPicker.clearThumbMemoryCache();
 
     List<AssetEntity> imgList = await PhotoPicker.pickAsset(
-      // BuildContext required
-      context: context,
+        // BuildContext required
+        context: context,
 
-      /// The following are optional parameters.
-      themeColor: Colors.green,
-      // the title color and bottom color
+        /// The following are optional parameters.
+        themeColor: Colors.green,
+        // the title color and bottom color
 
-      textColor: Colors.white,
-      // text color
-      padding: 1.0,
-      // item padding
-      dividerColor: Colors.grey,
-      // divider color
-      disableColor: Colors.grey.shade300,
-      // the check box disable color
-      itemRadio: 0.88,
-      // the content item radio
-      maxSelected: 8,
-      // max picker image count
-      // provider: I18nProvider.english,
-      provider: I18nProvider.english,
-      // i18n provider ,default is chinese. , you can custom I18nProvider or use ENProvider()
-      rowCount: 3,
-      // item row count
+        textColor: Colors.white,
+        // text color
+        padding: 1.0,
+        // item padding
+        dividerColor: Colors.grey,
+        // divider color
+        disableColor: Colors.grey.shade300,
+        // the check box disable color
+        itemRadio: 0.88,
+        // the content item radio
+        maxSelected: 8,
+        // max picker image count
+        // provider: I18nProvider.english,
+        provider: I18nProvider.english,
+        // i18n provider ,default is chinese. , you can custom I18nProvider or use ENProvider()
+        rowCount: 3,
+        // item row count
 
-      thumbSize: 150,
-      // preview thumb size , default is 64
-      sortDelegate: SortDelegate.common,
-      // default is common ,or you make custom delegate to sort your gallery
-      checkBoxBuilderDelegate: DefaultCheckBoxBuilderDelegate(
-        activeColor: Colors.white,
-        unselectedColor: Colors.white,
-        checkColor: Colors.green,
-      ),
-      // default is DefaultCheckBoxBuilderDelegate ,or you make custom delegate to create checkbox
+        thumbSize: 150,
+        // preview thumb size , default is 64
+        sortDelegate: SortDelegate.common,
+        // default is common ,or you make custom delegate to sort your gallery
+        checkBoxBuilderDelegate: DefaultCheckBoxBuilderDelegate(
+          activeColor: Colors.white,
+          unselectedColor: Colors.white,
+          checkColor: Colors.green,
+        ),
+        // default is DefaultCheckBoxBuilderDelegate ,or you make custom delegate to create checkbox
 
-      loadingDelegate: this,
-      // if you want to build custom loading widget,extends LoadingDelegate, [see example/lib/main.dart]
+        loadingDelegate: this,
+        // if you want to build custom loading widget,extends LoadingDelegate, [see example/lib/main.dart]
 
-      badgeDelegate: const DurationBadgeDelegate(),
-      // badgeDelegate to show badge widget
+        badgeDelegate: const DurationBadgeDelegate(),
+        // badgeDelegate to show badge widget
 
-      pickType: type,
-
-      photoPathList: pathList,
-    );
+        pickType: type,
+        photoPathList: pathList,
+        assetProvider: AssetProvider());
 
     if (imgList == null || imgList.isEmpty) {
       showToast("No pick item.");
