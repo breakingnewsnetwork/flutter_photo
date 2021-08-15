@@ -25,15 +25,15 @@ class PhotoPreviewPage extends StatefulWidget {
   /// 这里封装了结果
   final PhotoPreviewResult result;
 
-  final AssetProvider assetProvider;
+  final AssetProvider? assetProvider;
 
   const PhotoPreviewPage({
-    Key key,
-    @required this.selectedProvider,
-    @required this.list,
-    @required this.changeProviderOnCheckChange,
-    @required this.result,
-    @required this.assetProvider,
+    Key? key,
+    required this.selectedProvider,
+    required this.list,
+    required this.changeProviderOnCheckChange,
+    required this.result,
+    required this.assetProvider,
     this.initIndex = 0,
     this.isPreview = false,
   }) : super(key: key);
@@ -43,20 +43,20 @@ class PhotoPreviewPage extends StatefulWidget {
 }
 
 class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
-  PhotoPickerProvider get config => PhotoPickerProvider.of(context);
-  AssetProvider get assetProvider => widget.assetProvider;
+  PhotoPickerProvider? get config => PhotoPickerProvider.of(context);
+  AssetProvider? get assetProvider => widget.assetProvider;
 
-  Options get options => config.options;
+  Options? get options => config!.options;
 
-  Color get themeColor => options.themeColor;
+  Color? get themeColor => options!.themeColor;
 
-  Color get textColor => options.textColor;
+  Color? get textColor => options!.textColor;
 
   SelectedProvider get selectedProvider => widget.selectedProvider;
 
   List<AssetEntity> get list {
     if (!widget.isPreview) {
-      return assetProvider.data;
+      return assetProvider!.data;
     }
     return widget.list;
   }
@@ -86,7 +86,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
     return _selectedList;
   }
 
-  PageController pageController;
+  PageController? pageController;
 
   @override
   void initState() {
@@ -110,36 +110,36 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    int totalCount = assetProvider.current.assetCount ?? 0;
+    int totalCount = assetProvider?.current?.assetCount ?? 0;
     if (!widget.isPreview) {
-      totalCount = assetProvider.current.assetCount;
+      totalCount = assetProvider?.current?.assetCount ?? 0;
     } else {
       totalCount = list.length;
     }
 
     var data = Theme.of(context);
     var textStyle = TextStyle(
-      color: options.textColor,
+      color: options!.textColor,
       fontSize: 14.0,
     );
     return Theme(
       data: data.copyWith(
-        primaryColor: options.themeColor,
+        primaryColor: options!.themeColor,
       ),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: config.options.themeColor,
+          backgroundColor: config!.options!.themeColor,
           leading: BackButton(
-            color: options.textColor,
+            color: options!.textColor,
           ),
           title: StreamBuilder(
             stream: pageStream,
             initialData: widget.initIndex,
             builder: (ctx, snap) {
               return Text(
-                "${snap.data + 1}/$totalCount",
+                "${snap.data ?? 0 + 1}/$totalCount",
                 style: TextStyle(
-                  color: options.textColor,
+                  color: options!.textColor,
                 ),
               );
             },
@@ -147,13 +147,20 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
           actions: <Widget>[
             StreamBuilder(
               stream: pageStream,
-              builder: (ctx, s) => FlatButton(
-                splashColor: Colors.transparent,
+              builder: (ctx, s) => TextButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.transparent;
+                        return null; // Defer to the widget's default.
+                      }),
+                ),
                 onPressed: selectedList.length == 0 ? null : sure,
                 child: Text(
-                  config.provider.getSureText(options, selectedList.length),
+                  config!.provider!.getSureText(options, selectedList.length),
                   style: selectedList.length == 0
-                      ? textStyle.copyWith(color: options.disableColor)
+                      ? textStyle.copyWith(color: options!.disableColor)
                       : textStyle,
                 ),
               ),
@@ -198,7 +205,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
       ),
       child: StreamBuilder<int>(
         builder: (ctx, snapshot) {
-          var index = snapshot.data;
+          var index = snapshot.data!;
           var data = list[index];
           var checked = selectedList.contains(data);
           return Stack(
@@ -227,12 +234,12 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   }
 
   Widget _buildCheckboxContent(bool checked, int index) {
-    return options.checkBoxBuilderDelegate.buildCheckBox(
+    return options!.checkBoxBuilderDelegate!.buildCheckBox(
       context,
       checked,
       index,
       options,
-      config.provider,
+      config!.provider,
     );
   }
 
@@ -279,11 +286,11 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   }
 
   Future<void> _loadMore() async {
-    assetProvider.loadMore();
+    assetProvider!.loadMore();
   }
 
   Widget _buildLoadingWidget(AssetEntity entity) {
-    return options.loadingDelegate
+    return options!.loadingDelegate!
         .buildBigImageLoading(context, entity, themeColor);
   }
 
@@ -317,8 +324,8 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
               ImageItem(
                 themeColor: themeColor,
                 entity: item,
-                size: options.thumbSize,
-                loadingDelegate: options.loadingDelegate,
+                size: options!.thumbSize,
+                loadingDelegate: options!.loadingDelegate,
               ),
               IgnorePointer(
                 child: StreamBuilder(
@@ -342,7 +349,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 
   void changeSelected(AssetEntity entity, int index) {
     var itemIndex = list.indexOf(entity);
-    if (itemIndex != -1) pageController.jumpToPage(itemIndex);
+    if (itemIndex != -1) pageController!.jumpToPage(itemIndex);
   }
 
   void sure() {
@@ -351,11 +358,11 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 }
 
 class BigPhotoImage extends StatefulWidget {
-  final AssetEntity assetEntity;
-  final Widget loadingWidget;
+  final AssetEntity? assetEntity;
+  final Widget? loadingWidget;
 
   const BigPhotoImage({
-    Key key,
+    Key? key,
     this.assetEntity,
     this.loadingWidget,
   }) : super(key: key);
@@ -377,8 +384,8 @@ class _BigPhotoImageState extends State<BigPhotoImage>
     var height = MediaQuery.of(context).size.height;
     return FutureBuilder(
       future:
-          widget.assetEntity.thumbDataWithSize(width.floor(), height.floor()),
-      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+          widget.assetEntity!.thumbDataWithSize(width.floor(), height.floor()),
+      builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
         var file = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done && file != null) {
           print(file.length);

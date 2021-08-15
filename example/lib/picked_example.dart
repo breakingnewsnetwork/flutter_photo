@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo/photo.dart';
-
-import 'icon_text_button.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class PickedExample extends StatefulWidget {
@@ -21,11 +19,8 @@ class _PickedExampleState extends State<PickedExample> {
       ),
       body: Column(
         children: <Widget>[
-          IconTextButton(
-            icon: Icons.assignment,
-            text: "Pick asset",
-            onTap: _pickAsset,
-          ),
+          TextButton.icon(
+              onPressed: _pickAsset, icon: Icon(Icons.assignment), label: Text("Pick asset")),
           ListTile(
             title: Text("picked asset count = ${picked.length}"),
           ),

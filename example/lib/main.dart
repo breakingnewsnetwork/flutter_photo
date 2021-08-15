@@ -5,7 +5,6 @@ import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import './preview.dart';
-import 'icon_text_button.dart';
 import 'picked_example.dart';
 
 void main() => runApp(MyApp());
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -38,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   String currentSelected = "";
 
   @override
-  Widget buildBigImageLoading(BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildBigImageLoading(BuildContext context, AssetEntity entity, Color? themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -51,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   }
 
   @override
-  Widget buildPreviewLoading(BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildPreviewLoading(BuildContext context, AssetEntity? entity, Color? themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -69,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Icon(Icons.image),
             onPressed: _testPhotoListParams,
           ),
@@ -79,26 +78,15 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              IconTextButton(
-                icon: Icons.photo,
-                text: "photo",
-                onTap: () => _pickAsset(PickType.onlyImage),
-              ),
-              IconTextButton(
-                icon: Icons.videocam,
-                text: "video",
-                onTap: () => _pickAsset(PickType.onlyVideo),
-              ),
-              IconTextButton(
-                icon: Icons.album,
-                text: "all",
-                onTap: () => _pickAsset(PickType.all),
-              ),
-              IconTextButton(
-                icon: CupertinoIcons.reply_all,
-                text: "Picked asset example.",
-                onTap: () => routePage(PickedExample()),
-              ),
+              TextButton.icon(
+                  onPressed: () => _pickAsset(PickType.onlyImage), icon: Icon(Icons.photo), label: Text("photo")),
+              TextButton.icon(
+                  onPressed: () => _pickAsset(PickType.onlyVideo), icon: Icon(Icons.videocam), label: Text("video")),
+              TextButton.icon(onPressed: () => _pickAsset(PickType.all), icon: Icon(Icons.album), label: Text("all")),
+              TextButton.icon(
+                  onPressed: () => routePage(PickedExample()),
+                  icon: Icon(CupertinoIcons.reply_all),
+                  label: Text("Picked asset example.")),
             ],
           ),
         ),
@@ -116,14 +104,14 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
     _pickAsset(PickType.all, pathList: assetPathList);
   }
 
-  void _pickAsset(PickType type, {List<AssetPathEntity> pathList}) async {
+  void _pickAsset(PickType type, {List<AssetPathEntity>? pathList}) async {
     /// context is required, other params is optional.
     /// context is required, other params is optional.
     /// context is required, other params is optional.
 
     PhotoPicker.clearThumbMemoryCache();
 
-    List<AssetEntity> imgList = await PhotoPicker.pickAsset(
+    List<AssetEntity>? imgList = await PhotoPicker.pickAsset(
         // BuildContext required
         context: context,
 
@@ -177,7 +165,9 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       List<String> r = [];
       for (var e in imgList) {
         var file = await e.file;
-        r.add(file.absolute.path);
+        if (file != null) {
+          r.add(file.absolute.path);
+        }
       }
       currentSelected = r.join("\n\n");
 

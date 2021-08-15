@@ -15,15 +15,15 @@ class _NotPermissionDialogState extends State<NotPermissionDialog> {
   Widget build(BuildContext context) {
     var provider = widget.provider;
     return AlertDialog(
-      title: Text(provider.titleText),
+      title: Text(provider.titleText!),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: _onCancel,
-          child: Text(provider.cancelText),
+          child: Text(provider.cancelText!),
         ),
-        FlatButton(
+        TextButton(
           onPressed: _onSure,
-          child: Text(provider.sureText),
+          child: Text(provider.sureText!),
         ),
       ],
     );

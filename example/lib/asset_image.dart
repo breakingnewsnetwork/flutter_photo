@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class AssetImageWidget extends StatelessWidget {
-  final AssetEntity assetEntity;
+  final AssetEntity? assetEntity;
   final double width;
   final double height;
-  final BoxFit boxFit;
+  final BoxFit? boxFit;
 
   const AssetImageWidget({
-    Key key,
+    Key? key,
     @required this.assetEntity,
-    this.width,
-    this.height,
+    this.width = 50,
+    this.height = 50,
     this.boxFit,
   }) : super(key: key);
 
@@ -24,14 +24,14 @@ class AssetImageWidget extends StatelessWidget {
     }
 
     print(
-        "assetEntity.width = ${assetEntity.width} , assetEntity.height = ${assetEntity.height}");
+        "assetEntity.width = ${assetEntity!.width} , assetEntity.height = ${assetEntity!.height}");
 
-    return FutureBuilder<Uint8List>(
+    return FutureBuilder<Uint8List?>(
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
           return _buildContainer(
             child: Image.memory(
-              snapshot.data,
+              snapshot.data!,
               width: width,
               height: height,
               fit: boxFit,
@@ -41,15 +41,15 @@ class AssetImageWidget extends StatelessWidget {
           return _buildContainer();
         }
       },
-      future: assetEntity.thumbDataWithSize(
+      future: assetEntity!.thumbDataWithSize(
         width.toInt(),
         height.toInt(),
       ),
     );
   }
 
-  Widget _buildContainer({Widget child}) {
-    child ??= Container();
+  Widget _buildContainer({Widget? child}) {
+    child ?? Container();
     return Container(
       width: width,
       height: height,

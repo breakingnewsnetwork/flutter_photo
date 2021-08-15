@@ -21,12 +21,12 @@ part './main/bottom_widget.dart';
 part './main/image_item.dart';
 
 class PhotoMainPage extends StatefulWidget {
-  final ValueChanged<List<AssetEntity>> onClose;
-  final Options options;
-  final List<AssetPathEntity> photoList;
+  final ValueChanged<List<AssetEntity>>? onClose;
+  final Options? options;
+  final List<AssetPathEntity>? photoList;
 
   const PhotoMainPage({
-    Key key,
+    Key? key,
     this.onClose,
     this.options,
     this.photoList,
@@ -37,48 +37,48 @@ class PhotoMainPage extends StatefulWidget {
 }
 
 class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, GalleryListProvider {
-  Options get options => widget.options;
+  Options? get options => widget.options;
 
-  I18nProvider get i18nProvider => PhotoPickerProvider.of(context)?.provider;
+  I18nProvider? get i18nProvider => PhotoPickerProvider.of(context)?.provider;
 
-  AssetProvider get assetProvider => PhotoPickerProvider.of(context)?.assetProvider;
+  AssetProvider? get assetProvider => PhotoPickerProvider.of(context)?.assetProvider;
 
-  List<AssetEntity> get list => assetProvider.data;
+  List<AssetEntity> get list => assetProvider!.data;
 
-  Color get themeColor => options.themeColor;
+  Color? get themeColor => options!.themeColor;
 
-  AssetPathEntity _currentPath;
+  AssetPathEntity? _currentPath;
 
   bool _isInit = false;
 
-  AssetPathEntity get currentPath {
+  AssetPathEntity? get currentPath {
     if (_currentPath == null) {
       return null;
     }
     return _currentPath;
   }
 
-  set currentPath(AssetPathEntity value) {
+  set currentPath(AssetPathEntity? value) {
     _currentPath = value;
   }
 
   String get currentGalleryName {
     if (currentPath?.isAll == true) {
-      return i18nProvider.getAllGalleryText(options);
+      return i18nProvider!.getAllGalleryText(options);
     } else if (currentPath == null) {
-      return i18nProvider.getNoSelectedText(options);
+      return i18nProvider!.getNoSelectedText(options);
     }
     return currentPath?.name ?? "Select Folder";
   }
 
-  GlobalKey scaffoldKey;
-  ScrollController scrollController;
+  GlobalKey? scaffoldKey;
+  ScrollController? scrollController;
 
   bool isPushed = false;
 
-  bool get useAlbum => widget.photoList == null || widget.photoList.isEmpty;
+  bool get useAlbum => widget.photoList == null || widget.photoList!.isEmpty;
 
-  Throttle _changeThrottle;
+  late Throttle _changeThrottle;
 
   @override
   void initState() {
@@ -94,7 +94,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_isInit) {
-      final pickedList = PhotoPickerProvider.of(context).pickedAssetList ?? [];
+      final pickedList = PhotoPickerProvider.of(context)!.pickedAssetList ?? [];
       addPickedAsset(pickedList.toList());
       _refreshList();
     }
@@ -112,11 +112,11 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   @override
   Widget build(BuildContext context) {
     var textStyle = TextStyle(
-      color: options.textColor,
+      color: options!.textColor,
       fontSize: 14.0,
     );
     return Theme(
-      data: Theme.of(context).copyWith(primaryColor: options.themeColor),
+      data: Theme.of(context).copyWith(primaryColor: options!.themeColor),
       child: DefaultTextStyle(
         style: textStyle,
         child: Scaffold(
@@ -124,22 +124,29 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
             leading: IconButton(
               icon: Icon(
                 Icons.close,
-                color: options.textColor,
+                color: options!.textColor,
               ),
               onPressed: _cancel,
             ),
             title: Text(
-              i18nProvider.getTitleText(options),
+              i18nProvider!.getTitleText(options),
               style: TextStyle(
-                color: options.textColor,
+                color: options!.textColor,
               ),
             ),
             actions: <Widget>[
-              FlatButton(
-                splashColor: Colors.transparent,
+              TextButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.transparent;
+                        return null; // Defer to the widget's default.
+                      }),
+                ),
                 child: Text(
-                  i18nProvider.getSureText(options, selectedCount),
-                  style: selectedCount == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle,
+                  i18nProvider!.getSureText(options, selectedCount),
+                  style: selectedCount == 0 ? textStyle.copyWith(color: options!.disableColor) : textStyle,
                 ),
                 onPressed: selectedCount == 0 ? null : sure,
               ),
@@ -163,13 +170,13 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
 
   void _cancel() {
     selectedList.clear();
-    widget.onClose(selectedList);
+    widget.onClose!(selectedList);
   }
 
   @override
   bool isUpperLimit() {
-    var result = selectedCount == options.maxSelected;
-    if (result) _showTip(i18nProvider.getMaxTipText(options));
+    var result = selectedCount == options!.maxSelected;
+    if (result) _showTip(i18nProvider!.getMaxTipText(options));
     return result;
   }
 
@@ -181,17 +188,17 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     if (isPushed) {
       return;
     }
-    Scaffold.of(scaffoldKey.currentContext).showSnackBar(
+    ScaffoldMessenger.of(scaffoldKey!.currentContext!).showSnackBar(
       SnackBar(
         content: Text(
           msg,
           style: TextStyle(
-            color: options.textColor,
+            color: options!.textColor,
             fontSize: 14.0,
           ),
         ),
         duration: Duration(milliseconds: 1500),
-        backgroundColor: themeColor.withOpacity(0.7),
+        backgroundColor: themeColor!.withOpacity(0.7),
       ),
     );
   }
@@ -212,7 +219,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
 
   Future<void> _refreshListFromGallery() async {
     List<AssetPathEntity> pathList;
-    switch (options.pickType) {
+    switch (options!.pickType) {
       case PickType.onlyImage:
         pathList = await PhotoManager.getAssetPathList(type: RequestType.image);
         break;
@@ -226,25 +233,25 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     await _onRefreshAssetPathList(pathList);
   }
 
-  Future<void> _onRefreshAssetPathList(List<AssetPathEntity> pathList) async {
+  Future<void> _onRefreshAssetPathList(List<AssetPathEntity>? pathList) async {
     if (pathList == null) {
       return;
     }
 
-    options.sortDelegate.sort(pathList);
+    options!.sortDelegate!.sort(pathList);
 
     galleryPathList.clear();
     galleryPathList.addAll(pathList);
 
     if (pathList.isNotEmpty) {
-      assetProvider.current = pathList[0];
-      _currentPath = assetProvider.current;
-      await assetProvider.loadMore();
+      assetProvider!.current = pathList[0];
+      _currentPath = assetProvider!.current;
+      await assetProvider!.loadMore();
     }
 
     for (var path in pathList) {
       if (path.isAll) {
-        path.name = i18nProvider.getAllGalleryText(options);
+        path.name = i18nProvider!.getAllGalleryText(options);
       }
     }
 
@@ -260,19 +267,19 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
       return _buildLoading();
     }
 
-    final noMore = assetProvider.noMore;
+    final noMore = assetProvider!.noMore;
 
-    final count = assetProvider.count + (noMore ? 0 : 1);
+    final count = assetProvider!.count + (noMore ? 0 : 1);
 
     return Container(
-      color: options.dividerColor,
+      color: options!.dividerColor,
       child: GridView.builder(
         controller: scrollController,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: options.rowCount,
-          childAspectRatio: options.itemRadio,
-          crossAxisSpacing: options.padding,
-          mainAxisSpacing: options.padding,
+          crossAxisCount: options!.rowCount!,
+          childAspectRatio: options!.itemRadio!,
+          crossAxisSpacing: options!.padding!,
+          mainAxisSpacing: options!.padding!,
         ),
         itemBuilder: _buildItem,
         itemCount: count,
@@ -281,8 +288,8 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    final noMore = assetProvider.noMore;
-    if (!noMore && index == assetProvider.count) {
+    final noMore = assetProvider!.noMore;
+    if (!noMore && index == assetProvider!.count) {
       _loadMore();
       return _buildLoading();
     }
@@ -296,9 +303,9 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
             ImageItem(
               entity: data,
               themeColor: themeColor,
-              size: options.thumbSize,
-              loadingDelegate: options.loadingDelegate,
-              badgeDelegate: options.badgeDelegate,
+              size: options!.thumbSize,
+              loadingDelegate: options!.loadingDelegate,
+              badgeDelegate: options!.badgeDelegate,
             ),
             _buildMask(containsEntity(data)),
             _buildSelected(data),
@@ -309,7 +316,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   }
 
   Future<void> _loadMore() async {
-    await assetProvider.loadMore();
+    await assetProvider!.loadMore();
     if (mounted) {
       setState(() {});
     }
@@ -342,7 +349,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
 
   Widget _buildText(AssetEntity entity) {
     var isSelected = containsEntity(entity);
-    Widget child;
+    Widget? child;
     BoxDecoration decoration;
     if (isSelected) {
       child = Text(
@@ -350,7 +357,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 12.0,
-          color: options.textColor,
+          color: options!.textColor,
         ),
       );
       decoration = BoxDecoration(color: themeColor);
@@ -358,7 +365,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
       decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(1.0),
         border: Border.all(
-          color: themeColor,
+          color: themeColor!,
         ),
       );
     }
@@ -384,7 +391,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     }
   }
 
-  Future<void> _onGalleryChange(AssetPathEntity assetPathEntity) async {
+  Future<void> _onGalleryChange(AssetPathEntity? assetPathEntity) async {
     _currentPath = assetPathEntity;
 
     // _currentPath.assetList.then((v) async {
@@ -395,9 +402,9 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     //   await checkPickImageEntity();
     //   setState(() {});
     // });
-    if (assetPathEntity != assetProvider.current) {
-      assetProvider.current = assetPathEntity;
-      await assetProvider.loadMore();
+    if (assetPathEntity != assetProvider!.current) {
+      assetProvider!.current = assetPathEntity;
+      await assetProvider!.loadMore();
       if (mounted) {
         setState(() {});
       }
@@ -411,7 +418,8 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
       MaterialPageRoute(
         builder: (ctx) {
           return PhotoPickerProvider(
-            provider: PhotoPickerProvider.of(context).provider,
+            provider: i18nProvider,
+            assetProvider: assetProvider,
             options: options,
             child: PhotoPreviewPage(
               selectedProvider: this,
@@ -443,7 +451,8 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     var v = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => PhotoPickerProvider(
-          provider: PhotoPickerProvider.of(context).provider,
+          provider: i18nProvider,
+          assetProvider: assetProvider,
           options: options,
           child: PhotoPreviewPage(
             selectedProvider: this,
@@ -465,7 +474,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     compareAndRemoveEntities(result.previewSelectedList);
   }
 
-  bool handlePreviewResult(List<AssetEntity> v) {
+  bool handlePreviewResult(List<AssetEntity>? v) {
     if (v == null) {
       return false;
     }
@@ -490,7 +499,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              i18nProvider.loadingText(),
+              i18nProvider!.loadingText(),
               style: const TextStyle(
                 fontSize: 12.0,
               ),
@@ -511,7 +520,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
 
   Future<void> _onPhotoRefresh() async {
     List<AssetPathEntity> pathList;
-    switch (options.pickType) {
+    switch (options!.pickType) {
       case PickType.onlyImage:
         pathList = await PhotoManager.getAssetPathList(type: RequestType.image);
         break;
@@ -520,10 +529,6 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
         break;
       default:
         pathList = await PhotoManager.getAssetPathList();
-    }
-
-    if (pathList == null) {
-      return;
     }
 
     this.galleryPathList.clear();
