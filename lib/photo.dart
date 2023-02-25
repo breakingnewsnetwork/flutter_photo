@@ -143,8 +143,8 @@ class PhotoPicker {
     List<AssetEntity>? pickedAssetList,
     AssetProvider assetProvider,
   ) async {
-    var requestPermission = await PhotoManager.requestPermission();
-    if (requestPermission != true) {
+    var requestPermission = await PhotoManager.requestPermissionExtend();
+    if (requestPermission == PermissionState.denied) {
       var result = await showDialog(
         context: context,
         builder: (ctx) => NotPermissionDialog(

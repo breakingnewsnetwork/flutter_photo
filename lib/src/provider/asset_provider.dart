@@ -50,7 +50,7 @@ class AssetPaging {
     if (noMore == true) {
       return;
     }
-    var data = await path!.getAssetListPaged(page, pageCount);
+    var data = await path!.getAssetListPaged(page: page, size: pageCount);
     if (data.length == 0) {
       noMore = true;
     }

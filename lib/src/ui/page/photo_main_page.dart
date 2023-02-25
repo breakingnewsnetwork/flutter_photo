@@ -243,13 +243,15 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     galleryPathList.clear();
     galleryPathList.addAll(pathList);
 
-    for (var path in pathList) {
+    /*for (var path in pathList) {
       if (path.isAll) {
-        path.name = i18nProvider!.getAllGalleryText(options);
+        //fixme path.name = i18nProvider!.getAllGalleryText(options);
       }
-    }
+    }*/
 
-    await _onGalleryChange(pathList[0]);
+    if(pathList.isNotEmpty) {
+      await _onGalleryChange(pathList[0]);
+    }
 
     if (mounted) {
       setState(() {
