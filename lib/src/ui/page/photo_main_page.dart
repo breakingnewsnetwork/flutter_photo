@@ -476,10 +476,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     if (v == null) {
       return false;
     }
-    if (v is List<AssetEntity>) {
-      return true;
-    }
-    return false;
+    return true;
   }
 
   Widget _buildLoading() {

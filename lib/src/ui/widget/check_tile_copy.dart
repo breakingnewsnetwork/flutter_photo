@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart' hide Checkbox, CheckboxListTile;
 import 'package:flutter/material.dart';
 
 /// A [ListTile] with a [Checkbox]. In other words, a checkbox with a label.
@@ -186,7 +185,7 @@ class CheckboxListTile extends StatelessWidget {
     }
     return MergeSemantics(
       child: ListTileTheme.merge(
-        selectedColor: activeColor ?? Theme.of(context).accentColor,
+        selectedColor: activeColor ?? Theme.of(context).colorScheme.secondary,
         child: ListTile(
           leading: leading,
           title: title,
