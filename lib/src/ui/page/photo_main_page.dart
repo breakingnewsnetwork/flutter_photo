@@ -36,18 +36,21 @@ class PhotoMainPage extends StatefulWidget {
   _PhotoMainPageState createState() => _PhotoMainPageState();
 }
 
-class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, GalleryListProvider {
+class _PhotoMainPageState extends State<PhotoMainPage>
+    with SelectedProvider, GalleryListProvider {
   Options? get options => widget.options;
 
   I18nProvider? get i18nProvider => PhotoPickerProvider.of(context)?.provider;
 
-  AssetProvider? get assetProvider => PhotoPickerProvider.of(context)?.assetProvider;
+  AssetProvider? get assetProvider =>
+      PhotoPickerProvider.of(context)?.assetProvider;
 
   List<AssetEntity> get list => assetProvider!.data;
 
   Color? get themeColor => options!.themeColor;
 
   AssetPathEntity? _currentPath;
+  int _totalCount = 0;
 
   bool _isInit = false;
 
@@ -138,15 +141,17 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
               TextButton(
                 style: ButtonStyle(
                   overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
-                          return Colors.transparent;
-                        return null; // Defer to the widget's default.
-                      }),
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.transparent;
+                    return null; // Defer to the widget's default.
+                  }),
                 ),
                 child: Text(
                   i18nProvider!.getSureText(options, selectedCount),
-                  style: selectedCount == 0 ? textStyle.copyWith(color: options!.disableColor) : textStyle,
+                  style: selectedCount == 0
+                      ? textStyle.copyWith(color: options!.disableColor)
+                      : textStyle,
                 ),
                 onPressed: selectedCount == 0 ? null : sure,
               ),
@@ -249,7 +254,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
       }
     }*/
 
-    if(pathList.isNotEmpty) {
+    if (pathList.isNotEmpty) {
       await _onGalleryChange(pathList[0]);
     }
 
@@ -400,8 +405,24 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     //   await checkPickImageEntity();
     //   setState(() {});
     // });
-    if (assetPathEntity != assetProvider!.current) {
+
+
+    if (assetPathEntity != assetProvider!.current ) {
       assetProvider!.current = assetPathEntity;
+      await assetProvider!.loadMore();
+      if (mounted) {
+        setState(() {});
+      }
+    }
+
+    var newPhotoCount = 0;
+
+    if (assetPathEntity != null) {
+      newPhotoCount = await assetPathEntity.assetCountAsync;
+    }
+
+    if(newPhotoCount != _totalCount && assetProvider != null) {
+      assetProvider!.clear();
       await assetProvider!.loadMore();
       if (mounted) {
         setState(() {});

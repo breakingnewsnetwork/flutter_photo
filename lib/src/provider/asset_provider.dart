@@ -26,6 +26,12 @@ class AssetProvider {
     }
   }
 
+  void clear() {
+    _dataMap = {};
+    final paging = AssetPaging(current);
+    _dataMap[current] = paging;
+  }
+
   AssetPaging? getPaging() => _dataMap[current];
 
   bool get noMore => getPaging()?.noMore ?? false;
