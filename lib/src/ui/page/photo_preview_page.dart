@@ -54,6 +54,8 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 
   SelectedProvider get selectedProvider => widget.selectedProvider;
 
+  int totalCount = 0;
+
   List<AssetEntity> get list {
     if (!widget.isPreview) {
       return assetProvider!.data;
@@ -108,14 +110,24 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
     super.dispose();
   }
 
+  Future<void> updateTotalCount() async {
+    int totalCountInt = await assetProvider?.current?.assetCountAsync ?? 0;
+    if (!widget.isPreview) {
+      totalCountInt = await assetProvider?.current?.assetCountAsync ?? 0;
+    } else {
+      totalCountInt = list.length;
+    }
+
+    if(mounted && totalCount != totalCountInt) {
+      setState(() {
+        totalCount = totalCountInt;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    int totalCount = assetProvider?.current?.assetCount ?? 0;
-    if (!widget.isPreview) {
-      totalCount = assetProvider?.current?.assetCount ?? 0;
-    } else {
-      totalCount = list.length;
-    }
+    updateTotalCount();
 
     var data = Theme.of(context);
     var textStyle = TextStyle(
