@@ -20,6 +20,28 @@ class ChangeGalleryDialog extends StatefulWidget {
 }
 
 class _ChangeGalleryDialogState extends State<ChangeGalleryDialog> {
+
+  List<int> photosCount = [];
+
+  @override
+  void initState() {
+    super.initState();
+    photosCount = List.filled(widget.galleryList!.length, 0);
+    getPhotosCount();
+  }
+
+  Future getPhotosCount() async {
+    for (var i = 0; i < widget.galleryList!.length; i++) {
+      var entity = widget.galleryList![i];
+      var count = await entity.assetCountAsync;
+      photosCount[i] = count;
+    }
+
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +64,7 @@ class _ChangeGalleryDialogState extends State<ChangeGalleryDialog> {
 
     return TextButton(
       child: ListTile(
-        title: Text("$text (${entity.assetCount})"),
+        title: Text("$text (${photosCount[index]})"),
       ),
       onPressed: () {
         Navigator.pop(context, entity);
