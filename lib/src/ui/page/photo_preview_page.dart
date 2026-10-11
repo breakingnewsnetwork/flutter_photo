@@ -102,6 +102,11 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
     _selectedList.addAll(selectedProvider.selectedList);
 
     result.previewSelectedList = _selectedList;
+
+    // The PageView must know its pages on the first frame, otherwise
+    // initialPage is clamped back towards 0 and a different photo is shown.
+    totalCount = list.length;
+    updateTotalCount();
   }
 
   @override
@@ -111,7 +116,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   }
 
   Future<void> updateTotalCount() async {
-    int totalCountInt = await assetProvider?.current?.assetCountAsync ?? 0;
+    int totalCountInt;
     if (!widget.isPreview) {
       totalCountInt = await assetProvider?.current?.assetCountAsync ?? 0;
     } else {
@@ -127,8 +132,6 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    updateTotalCount();
-
     var data = Theme.of(context);
     var textStyle = TextStyle(
       color: options!.textColor,
@@ -149,7 +152,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
             initialData: widget.initIndex,
             builder: (ctx, snap) {
               return Text(
-                "${snap.data ?? 0 + 1}/$totalCount",
+                "${(snap.data ?? 0) + 1}/$totalCount",
                 style: TextStyle(
                   color: options!.textColor,
                 ),
@@ -161,9 +164,9 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
               stream: pageStream,
               builder: (ctx, s) => TextButton(
                 style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
+                  overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                          (Set<WidgetState> states) {
+                        if (states.contains(WidgetState.pressed))
                           return Colors.transparent;
                         return null; // Defer to the widget's default.
                       }),
@@ -182,7 +185,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
         body: PageView.builder(
           controller: pageController,
           itemBuilder: _buildItem,
-          itemCount: totalCount,
+          itemCount: list.length,
           onPageChanged: _onPageChanged,
         ),
         bottomSheet: _buildThumb(),
@@ -298,7 +301,10 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   }
 
   Future<void> _loadMore() async {
-    assetProvider!.loadMore();
+    await assetProvider!.loadMore();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Widget _buildLoadingWidget(AssetEntity entity) {
@@ -347,7 +353,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
                       return Container();
                     }
                     return Container(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                     );
                   },
                 ),

@@ -11,7 +11,7 @@ class AssetImageWidget extends StatelessWidget {
 
   const AssetImageWidget({
     Key? key,
-    @required this.assetEntity,
+    required this.assetEntity,
     this.width = 50,
     this.height = 50,
     this.boxFit,

@@ -50,9 +50,17 @@ class AssetPaging {
 
   bool noMore = false;
 
+  Future<void>? _loading;
+
   AssetPaging(this.path, {this.pageCount = 50});
 
-  Future<void> loadMore() async {
+  /// Concurrent calls share the in-flight request, so the same page is never
+  /// fetched and appended twice (which would shift every following index).
+  Future<void> loadMore() {
+    return _loading ??= _loadMore().whenComplete(() => _loading = null);
+  }
+
+  Future<void> _loadMore() async {
     if (noMore == true) {
       return;
     }

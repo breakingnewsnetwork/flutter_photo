@@ -140,9 +140,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
             actions: <Widget>[
               TextButton(
                 style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed))
+                  overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                      (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.pressed))
                       return Colors.transparent;
                     return null; // Defer to the widget's default.
                   }),
@@ -203,7 +203,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
           ),
         ),
         duration: Duration(milliseconds: 1500),
-        backgroundColor: themeColor!.withOpacity(0.7),
+        backgroundColor: themeColor!.withValues(alpha: 0.7),
       ),
     );
   }
@@ -328,7 +328,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
   _buildMask(bool showMask) {
     return IgnorePointer(
       child: AnimatedContainer(
-        color: showMask ? Colors.black.withOpacity(0.5) : Colors.transparent,
+        color: showMask ? Colors.black.withValues(alpha: 0.5) : Colors.transparent,
         duration: Duration(milliseconds: 300),
       ),
     );
@@ -422,6 +422,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
     }
 
     if(newPhotoCount != _totalCount && assetProvider != null) {
+      _totalCount = newPhotoCount;
       assetProvider!.clear();
       await assetProvider!.loadMore();
       if (mounted) {

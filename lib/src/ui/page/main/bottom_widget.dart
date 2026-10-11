@@ -52,9 +52,9 @@ class __BottomWidgetState extends State<_BottomWidget> {
                   await _showGallerySelectDialog();
                 },
                 style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
+                  overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                          (Set<WidgetState> states) {
+                        if (states.contains(WidgetState.pressed))
                           return Colors.transparent;
                         return null; // Defer to the widget's default.
                       }),
@@ -75,14 +75,14 @@ class __BottomWidgetState extends State<_BottomWidget> {
               TextButton(
                 onPressed: widget.onTapPreview,
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(options!.textColor ?? Colors.white),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
+                  foregroundColor: WidgetStateProperty.all<Color>(options!.textColor ?? Colors.white),
+                  overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                          (Set<WidgetState> states) {
+                        if (states.contains(WidgetState.pressed))
                           return Colors.transparent;
-                        if (states.contains(MaterialState.disabled))
+                        if (states.contains(WidgetState.disabled))
                           return options!.disableColor;
-                        if (states.contains(MaterialState.disabled))
+                        if (states.contains(WidgetState.disabled))
                           return options!.disableColor;
                         return null; // Defer to the widget's default.
                       }),

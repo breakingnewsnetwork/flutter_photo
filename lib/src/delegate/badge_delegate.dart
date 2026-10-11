@@ -63,7 +63,7 @@ class DurationBadgeDelegate extends BadgeDelegate {
           alignment: alignment,
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.65),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.65),
             ),
             child: Text(
               text,

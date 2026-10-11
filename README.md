@@ -107,6 +107,21 @@ You can see [github](https://github.com/caijinglong/flutter_photo/blob/master/ex
 
 ## About android
 
+### Permissions
+
+On Android 13 (API 33) and above you must declare the media permissions in your app's `android/app/src/main/AndroidManifest.xml`, otherwise the permission request is denied immediately and there is no gallery permission to enable in the system settings:
+
+```xml
+<manifest>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <!-- Android 14+: allows the user to grant access to selected photos only -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
+</manifest>
+```
+
+`READ_MEDIA_IMAGES` and `READ_MEDIA_VIDEO` are both required even if you only pick one media type. `READ_EXTERNAL_STORAGE` for older Android versions is declared by `photo_manager`.
+
 ### Migrate to androidX
 
 See the [gitbook](https://caijinglong.gitbooks.io/migrate-flutter-to-androidx/content/)

@@ -68,17 +68,19 @@ class RadioCheckBoxBuilderDelegate extends CheckBoxBuilderDelegate {
   ) {
     return Theme(
       data: Theme.of(context).copyWith(unselectedWidgetColor: unselectedColor),
-      child: RadioListTile<bool>(
-        value: true,
-        onChanged: (bool? check) {},
-        activeColor: activeColor,
-        title: Text(
-          i18nProvider!.getSelectedOptionsText(options),
-          textAlign: TextAlign.end,
-          style: TextStyle(color: options!.textColor, fontSize: 14.0),
-        ),
+      child: RadioGroup<bool>(
         groupValue: checked,
-        controlAffinity: ListTileControlAffinity.trailing,
+        onChanged: (bool? check) {},
+        child: RadioListTile<bool>(
+          value: true,
+          activeColor: activeColor,
+          title: Text(
+            i18nProvider!.getSelectedOptionsText(options),
+            textAlign: TextAlign.end,
+            style: TextStyle(color: options!.textColor, fontSize: 14.0),
+          ),
+          controlAffinity: ListTileControlAffinity.trailing,
+        ),
       ),
     );
   }

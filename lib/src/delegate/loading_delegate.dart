@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-abstract class LoadingDelegate {
+abstract mixin class LoadingDelegate {
   Widget buildBigImageLoading(
       BuildContext context, AssetEntity entity, Color? themeColor);
 
